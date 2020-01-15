@@ -19,7 +19,7 @@ The various folders in this repository each store a preserved version of the ATT
 ## Related MITRE Work
 
 #### ATT&CK
-ATT&CK<sup>™</sup> is a curated knowledge base and model for cyber adversary behavior, reflecting the various phases of an adversary’s lifecycle and the platforms they are known to target. ATT&CK is useful for understanding security risk against known adversary behavior, for planning security improvements, and verifying defenses work as expected.
+ATT&CK<sup>®</sup> is a curated knowledge base and model for cyber adversary behavior, reflecting the various phases of an adversary’s lifecycle and the platforms they are known to target. ATT&CK is useful for understanding security risk against known adversary behavior, for planning security improvements, and verifying defenses work as expected.
 
 https://attack.mitre.org
 
@@ -28,7 +28,7 @@ https://attack.mitre.org
 
 ## Notice
 
-Copyright 2019 The MITRE Corporation
+Copyright 2020 The MITRE Corporation
 
 Approved for Public Release; Distribution Unlimited. Case Number 19-3504
 
