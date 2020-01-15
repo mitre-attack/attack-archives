@@ -1,5 +1,6 @@
 import argparse
 import shutil
+import stat
 import os
 import tqdm
 import re
@@ -26,6 +27,27 @@ allowed_in_link = "".join(list(map(lambda s: s.strip(), [
     "   /    ",
 ]))) 
 
+# Error handler for windows by:
+# https://stackoverflow.com/questions/2656322/shutil-rmtree-fails-on-windows-with-access-is-denied
+def onerror(func, path, exc_info):
+    """
+    Error handler for ``shutil.rmtree``.
+
+    If the error is due to an access error (read only file)
+    it attempts to add write permission and then retries.
+
+    If the error is for another reason it re-raises the error.
+
+    Usage : ``shutil.rmtree(path, onerror=onerror)``
+    """
+
+    try:
+        if not os.access(path, os.W_OK):
+            # Is the error an access error ?
+            os.chmod(path, stat.S_IWUSR)
+            func(path)
+    except:
+        raise
 
 def replace_links(filepath, version_name, version_displayname):
     """In the given file, replace the in-site links to reference 
@@ -44,9 +66,14 @@ def replace_links(filepath, version_name, version_displayname):
         tostr = f'{prefix}="{dest_link_format}"'
         return re.sub(fromstr, tostr, html_str)
 
+    def substitute_redirection(prefix, html_str):
+        from_str = f"{prefix}=([{allowed_in_link}]+)[\"']"
+        to_str = f'{prefix}={dest_link_format}"'
+        return re.sub(from_str, to_str, html_str)
+
     html_str = substitute("src", html_str)
     html_str = substitute("href", html_str)
-
+    html_str = substitute_redirection('content="0; url', html_str)
 
     # add the previous versions header
     html_str = html_str.replace("<!-- !previous versions banner! -->", (\
@@ -78,30 +105,30 @@ def preserve(version_name, version_displayname, changelog):
     # handle replace
     if os.path.exists(dest):
         print("\t- previous version exists with this name already: deleting previous version... ", end="", flush=True)
-        shutil.rmtree(dest)
+        shutil.rmtree(dest, onerror=onerror)
         print("done")
-    
 
     print("\t- cloning attack-website github repo... ", end="", flush=True)
-    git.Repo.clone_from("https://github.com/mitre-attack/attack-website.git",dest)
+    git.Repo.clone_from("https://github.com/mitre-attack/attack-website.git", dest, branch='gh-pages')
     print("done")
     # we don't want the cloned repo to use its own version control so 
     # remove the .git folder
     print("\t- removing .git from cloned repo... ", end="", flush=True)
     gitpath = os.path.join(dest, ".git")
-    shutil.rmtree(gitpath)
+    shutil.rmtree(gitpath, onerror=onerror)
     print("done")
     # remove cname
     print("\t- removing CNAME... ", end="", flush=True)
     cname = os.path.join(dest, "CNAME")
-    os.remove(cname)
+    if os.path.exists(cname):
+        os.remove(cname)
     print("done")
     
     # remove previous versions from this previous version
     preserved_previous_path = os.path.join(dest, previous_route)
     if os.path.exists(preserved_previous_path):
         print(f"\t- removing '{previous_route}' folder from preserved version to prevent recursive previous versions... ", end="", flush=True)
-        shutil.rmtree(preserved_previous_path)
+        shutil.rmtree(preserved_previous_path, onerror=onerror)
         print("done")
     else:
         print(f"\t- no '{previous_route}' folder to remove from from preserved version")
@@ -110,14 +137,14 @@ def preserve(version_name, version_displayname, changelog):
                                                           "previous-versions")
     if os.path.exists(previous_versions_list_path):
         print("\t- removing previous-versions page...", end="", flush=True)    
-        shutil.rmtree(previous_versions_list_path)
+        shutil.rmtree(previous_versions_list_path, onerror=onerror)
         print("done")
 
     # ditto for changelog
     changelog_path = os.path.join(dest, "resources", "updates")
     if os.path.exists(changelog_path):
         print("\t- removing updates page...", end="", flush=True)    
-        shutil.rmtree(changelog_path)
+        shutil.rmtree(changelog_path, onerror=onerror)
         print("done")
 
     # parse and replace content links
@@ -133,14 +160,18 @@ def preserve(version_name, version_displayname, changelog):
     print("\t- replacing 'site_base_url' in search.js... ",end="", flush=True)
     search_file_path = os.path.join(dest, "theme", "scripts", "search.js")
     
-    with open(search_file_path, mode="r", encoding='utf8') as search_file:
-        search_contents = search_file.read()
-        search_contents = re.sub('site_base_url ?= ? ""', \
-                    f'site_base_url = "/{previous_route}/{version_name}"', \
-                                                              search_contents)
+    if os.path.exists(search_file_path):
+        search_contents = ""
 
-    with open(search_file_path, mode="w", encoding='utf8') as search_file:
-        search_file.write(search_contents)
+        with open(search_file_path, mode="r", encoding='utf8') as search_file:
+            search_contents = search_file.read()
+            search_contents = re.sub('site_base_url ?= ? ""', \
+                        f'site_base_url = "/{previous_route}/{version_name}"', \
+                                                                search_contents)
+
+        with open(search_file_path, mode="w", encoding='utf8') as search_file:
+            search_file.write(search_contents)
+
     print("done")
 
     # update archives.json
