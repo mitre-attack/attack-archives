@@ -158,7 +158,7 @@ def preserve(version_name, version_displayname, changelog):
 
     # replace site_base_url in search.js
     print("\t- replacing 'site_base_url' in search.js... ",end="", flush=True)
-    search_file_path = os.path.join(dest, "theme", "scripts", "search.js")
+    search_file_path = os.path.join(dest, "theme", "scripts", "search_babelized.js")
     
     if os.path.exists(search_file_path):
         search_contents = ""
