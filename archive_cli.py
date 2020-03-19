@@ -94,7 +94,7 @@ def replace_links(filepath, version_name, version_displayname):
         updated_html.write(html_str)
 
 
-def preserve(version_name, version_displayname, changelog):
+def preserve(version_name, version_displayname, changelog, cti_url, gh_pages_url, retired):
     """preserve the current version on github as a named previous version. """
 
     print("preserving current version under route '" + version_name + \
@@ -182,7 +182,10 @@ def preserve(version_name, version_displayname, changelog):
         "path": version_name,
         "date_start": version_displayname["start"],
         "date_end": version_displayname["end"],
-        "changelog": changelog
+        "changelog": changelog,
+        "cti_url": cti_url,
+        "gh_pages_url": gh_pages_url,
+        "retired": retired
     })
     with open("archives.json", "w") as archives:
         archives.write(json.dumps(archives_data, indent=4))
@@ -200,8 +203,17 @@ if __name__ == "__main__":
                         help="the date the current version is being replaced in 'Month day, YEAR' format, e.g 'January 1, 1970'"
     )
     parser.add_argument("changelog", type=str,
-                        help="the name of the changelog file for this version, to be found in resources/updates. Typically updates-MONTH-YEAR, e.g 'updates-january-1970'"
+                        help="The name of the changelog file for this version, to be found in resources/updates. Typically updates-MONTH-YEAR, e.g 'updates-january-1970'"
+    )
+    parser.add_argument("cti_url", type=str,
+                        help="The mitre/cti url for this version, which is listed at https://github.com/mitre/cti/releases"
+    )
+    parser.add_argument("gh_pages_url", type=str,
+                        help="The url to the latest github commit for this version, found at https://github.com/mitre-attack/attack-website/commits/master"
+    )
+    parser.add_argument("retired", type=bool,
+                        help="The boolean value describing the status for this version. If true, this version will not be deployed to the att&ck website, and the entry for this version on /resources/previous-versions/ will be replaced with a blurb explaining that the version was retired, along with a descriptive link to cti_url and gh_pages_url"
     )
 
     args = parser.parse_args()
-    preserve(args.route, {"start": args.date_start, "end": args.date_end}, args.changelog)
+    preserve(args.route, {"start": args.date_start, "end": args.date_end}, args.changelog, args.cti_url, args.gh_pages_url, args.retired)
