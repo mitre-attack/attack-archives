@@ -16,6 +16,10 @@ The `archives.json` file contains data about preserved versions. It is used to b
 
 The various folders in this repository each store a preserved version of the ATT&CK website. They are built to the `/previous/` route of the ATT&CK website. For example, a folder named `january1970` would be built to `https://attack.mitre.org/previous/january1970/`. 
 
+## retired versions
+
+To retire a version of the ATT&CK website, simply find that version's data in `archives.json` and change its `retired` value to `true` (boolean). Then, please delete the corresponding directory (the directory name matches the json object's `route` field) from this repo.
+
 ## Related MITRE Work
 
 #### ATT&CK
