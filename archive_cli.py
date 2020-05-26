@@ -94,7 +94,7 @@ def replace_links(filepath, version_name, version_displayname):
         updated_html.write(html_str)
 
 
-def preserve(version_name, version_displayname, changelog, cti_url, gh_pages_url):
+def preserve(version_name, version_displayname, changelog, cti_url):
     """preserve the current version on github as a named previous version. """
 
     print("preserving current version under route '" + version_name + \
@@ -180,12 +180,11 @@ def preserve(version_name, version_displayname, changelog, cti_url, gh_pages_url
         archives_data = json.loads(archives.read())
     archives_data.append({
         "path": version_name,
+        "aliases": [],
         "date_start": version_displayname["start"],
         "date_end": version_displayname["end"],
         "changelog": changelog,
         "cti_url": cti_url,
-        "gh_pages_url": gh_pages_url,
-        "retired": False
     })
     with open("archives.json", "w") as archives:
         archives.write(json.dumps(archives_data, indent=4))
@@ -194,7 +193,7 @@ def preserve(version_name, version_displayname, changelog, cti_url, gh_pages_url
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="preserve the current state of attack.mitre.org as a named previous version")
     parser.add_argument("route", type=str,
-                        help="The route under which to store the previous version. Format should be monthYEAR, e.g 'january1970'"
+                        help="The route under which to store the previous version. Format should be the major version number of the ATT&CK content, e.g v5"
     )
     parser.add_argument("date_start", type=str,
                         help="the date the current version went live in 'Month day, YEAR' format, e.g 'January 1, 1970'"
@@ -208,9 +207,6 @@ if __name__ == "__main__":
     parser.add_argument("cti_url", type=str,
                         help="The mitre/cti url for this version, which is listed at https://github.com/mitre/cti/releases"
     )
-    parser.add_argument("gh_pages_url", type=str,
-                        help="The url to the latest github commit for this version, found at https://github.com/mitre-attack/attack-website/commits/master"
-    )
 
     args = parser.parse_args()
-    preserve(args.route, {"start": args.date_start, "end": args.date_end}, args.changelog, args.cti_url, args.gh_pages_url)
+    preserve(args.route, {"start": args.date_start, "end": args.date_end}, args.changelog, args.cti_url)

@@ -1,29 +1,26 @@
 [
     {
-        "path": "october2018",
+        "path": "v3",
+        "aliases": ["october2018"],
         "date_start": "October 23, 2018",
         "date_end": "April 30, 2019",
         "changelog": "updates-october-2018",
-        "cti_url": "https://github.com/mitre/cti/releases/tag/ATT%26CK-v6.0",
-        "gh_pages_url": "https://github.com/mitre-attack/attack-website/tree/ece518a3467170065002a6a3785c8e94dbd7311b",
-        "retired": false
+        "cti_url": "https://github.com/mitre/cti/releases/tag/ATT%26CK-v3.0"
     },
     {
-        "path": "april2019",
+        "path": "v4",
+        "aliases": ["april2019"],
         "date_start": "May 1, 2019",
         "date_end": "July 31, 2019",
         "changelog": "updates-april-2019",
-        "cti_url": "https://github.com/mitre/cti/releases/tag/ATT%26CK-v4.0",
-        "gh_pages_url": "https://github.com/mitre-attack/attack-website/tree/68692a59429a201865bf5181612fe80b663dcd58",
-        "retired": false
+        "cti_url": "https://github.com/mitre/cti/releases/tag/ATT%26CK-v4.0"
     },
     {
-        "path": "july2019",
+        "path": "v5",
+        "aliases": ["july2019"],
         "date_start": "August 1, 2019",
         "date_end": "October 24, 2019",
         "changelog": "updates-july-2019",
-        "cti_url": "https://github.com/mitre/cti/releases/tag/ATT%26CK-v5.0",
-        "gh_pages_url": "https://github.com/mitre-attack/attack-website/tree/61008763a54650c281922c410ca66e638ba0451d",
-        "retired": false
+        "cti_url": "https://github.com/mitre/cti/releases/tag/ATT%26CK-v5.2"
     }    
 ]
