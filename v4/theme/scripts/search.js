@@ -1,7 +1,7 @@
 
 // this is used for the previous-versions feature to prepend urls for index.json and search result links.
 // it gets parsed automatically when a version is preserved
-site_base_url = "/previous/april2019"
+site_base_url = "/previous/v4"
 
 $.ajax({
   url: site_base_url + "/index.json",
