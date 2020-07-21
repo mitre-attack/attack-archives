@@ -1,3 +1,7 @@
+# This repostitory is deprecated
+
+[attack-website#184](https://github.com/mitre-attack/attack-website/pull/184) revised the versioning system so that this repository is no longer nessecary. Please see [the changelog for that update](https://github.com/mitre-attack/attack-website/blob/master/CHANGELOG.md#10-june-2020) for more information.
+
 # attack-archives
 
 attack-archives stores previous ATT&CK releases as seen in the [previous versions feature of the ATT&CK website](https://attack.mitre.org/resources/previous-versions/). The ATT&CK website build script pulls the content of this repo to build the previous versions pages.
