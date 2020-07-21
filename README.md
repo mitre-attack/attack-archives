@@ -1,4 +1,4 @@
-# This repostitory is deprecated
+# This repository is deprecated
 
 [attack-website#184](https://github.com/mitre-attack/attack-website/pull/184) revised the versioning system so that this repository is no longer nessecary. Please see [the changelog for that update](https://github.com/mitre-attack/attack-website/blob/master/CHANGELOG.md#10-june-2020) for more information.
 
